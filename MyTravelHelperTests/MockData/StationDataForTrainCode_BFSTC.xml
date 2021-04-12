@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfObjStationData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.irishrail.ie/realtime/">
+  <objStationData>
+    <Servertime>2021-04-11T17:20:21.743</Servertime>
+    <Traincode>A148 </Traincode>
+    <Stationfullname>Belfast</Stationfullname>
+    <Stationcode>BFSTC</Stationcode>
+    <Querytime>17:20:21</Querytime>
+    <Traindate>11 Apr 2021</Traindate>
+    <Origin>Dublin Connolly</Origin>
+    <Destination>Belfast</Destination>
+    <Origintime>16:00</Origintime>
+    <Destinationtime>18:08</Destinationtime>
+    <Status>En Route</Status>
+    <Lastlocation>Departed Dundalk</Lastlocation>
+    <Duein>48</Duein>
+    <Late>0</Late>
+    <Exparrival>18:08</Exparrival>
+    <Expdepart>00:00</Expdepart>
+    <Scharrival>18:08</Scharrival>
+    <Schdepart>00:00</Schdepart>
+    <Direction>Northbound</Direction>
+    <Traintype>DD/90</Traintype>
+    <Locationtype>D</Locationtype>
+  </objStationData>
+</ArrayOfObjStationData>

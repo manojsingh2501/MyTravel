@@ -8,36 +8,44 @@
 
 import UIKit
 
-protocol ViewToPresenterProtocol: class{
+protocol ViewToPresenterProtocol: class {
     var view: PresenterToViewProtocol? {get set}
     var interactor: PresenterToInteractorProtocol? {get set}
     var router: PresenterToRouterProtocol? {get set}
     func fetchallStations()
-    func searchTapped(source:String,destination:String)
+    func searchTapped(source: String, destination: String)
 }
 
-protocol PresenterToViewProtocol: class{
-    func saveFetchedStations(stations:[Station]?)
-    func showInvalidSourceOrDestinationAlert()
+protocol PresenterToViewProtocol: class {
+    func saveFetchedStations(stations: [Station]?)
     func updateLatestTrainList(trainsList: [StationTrain])
+    func showInvalidSourceOrDestinationAlert()
     func showNoTrainsFoundAlert()
     func showNoTrainAvailbilityFromSource()
-    func showNoInterNetAvailabilityMessage()
+    func showNoInternetAvailabilityMessage()
 }
 
 protocol PresenterToRouterProtocol: class {
-    static func createModule()-> SearchTrainViewController
+    static func createModule() -> SearchTrainViewController
 }
 
 protocol PresenterToInteractorProtocol: class {
-    var presenter:InteractorToPresenterProtocol? {get set}
+    init(webService: WebServiceProtocol)
+    var webService: WebServiceProtocol { get }
+    var presenter: InteractorToPresenterProtocol? { get set }
     func fetchallStations()
-    func fetchTrainsFromSource(sourceCode:String,destinationCode:String)
+    func fetchTrainsFromSource(sourceCode: String, destinationCode: String)
 }
 
 protocol InteractorToPresenterProtocol: class {
-    func stationListFetched(list:[Station])
-    func fetchedTrainsList(trainsList:[StationTrain]?)
+    func stationListFetched(list: [Station])
+    func fetchedTrainsList(trainsList: [StationTrain]?)
     func showNoTrainAvailbilityFromSource()
-    func showNoInterNetAvailabilityMessage()
+    func showNoInternetAvailabilityMessage()
+}
+
+protocol WebServiceProtocol: class {
+    func fetchallStations(completionHandler: @escaping (Stations?, WebServicesError?) -> Void)
+    func fetchTrainsFromSource(sourceCode: String, completionHandler: @escaping (StationData?, WebServicesError?) -> Void)
+    func getTrainMovements(trainCode: String, trainDate: String, completionHandler: @escaping (TrainMovementsData?, WebServicesError?) -> Void)
 }

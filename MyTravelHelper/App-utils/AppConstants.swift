@@ -7,5 +7,6 @@
 //
 
 import Foundation
-
+// swiftlint:disable identifier_name
 let PROGRESS_INDICATOR_VIEW_TAG: Int = 10
+// swiftlint:enable identifier_name

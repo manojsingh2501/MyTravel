@@ -50,4 +50,3 @@ struct Station: Codable {
         self.init(desc: desc, latitude: lat, longitude: long, code: code, stationId: stationId)
     }
 }
-

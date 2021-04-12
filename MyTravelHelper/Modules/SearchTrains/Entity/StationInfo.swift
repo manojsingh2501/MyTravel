@@ -22,10 +22,10 @@ struct StationTrain: Codable {
     var stationCode: String
     var trainDate: String
     var dueIn: Int
-    var lateBy:Int
-    var expArrival:String
-    var expDeparture:String
-    var destinationDetails:TrainMovement?
+    var lateBy: Int
+    var expArrival: String
+    var expDeparture: String
+    var destinationDetails: TrainMovement?
 
     enum CodingKeys: String, CodingKey {
         case trainCode = "Traincode"
@@ -38,7 +38,7 @@ struct StationTrain: Codable {
         case expDeparture = "Expdepart"
     }
 
-    init(trainCode: String, fullName: String, stationCode: String, trainDate: String, dueIn: Int,lateBy:Int,expArrival:String,expDeparture:String) {
+    init(trainCode: String, fullName: String, stationCode: String, trainDate: String, dueIn: Int, lateBy:Int, expArrival:String, expDeparture:String) {
         self.trainCode = trainCode
         self.stationFullName = fullName
         self.stationCode = stationCode
@@ -63,4 +63,3 @@ struct StationTrain: Codable {
         self.init(trainCode: trainCode, fullName: fullName, stationCode: code, trainDate: trainDate, dueIn: dueIn, lateBy: late, expArrival: arrival, expDeparture: departure)
     }
 }
-

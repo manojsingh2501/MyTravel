@@ -8,77 +8,85 @@
 
 import Foundation
 import XMLParsing
-import Alamofire
 
 class SearchTrainInteractor: PresenterToInteractorProtocol {
     var _sourceStationCode = String()
     var _destinationStationCode = String()
-    var presenter: InteractorToPresenterProtocol?
+    weak var presenter: InteractorToPresenterProtocol?
+    var webService: WebServiceProtocol
+
+    required init(webService: WebServiceProtocol) {
+        self.webService = webService
+    }
 
     func fetchallStations() {
-        if Reach().isNetworkReachable() == true {
-            Alamofire.request("http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML")
-                .response { (response) in
-                let station = try? XMLDecoder().decode(Stations.self, from: response.data!)
-                self.presenter!.stationListFetched(list: station!.stationsList)
-            }
-        } else {
-            self.presenter!.showNoInterNetAvailabilityMessage()
+        webService.fetchallStations { [weak self] station, _ in
+            guard let strongSelf = self else { return }
+            strongSelf.presenter!.stationListFetched(list: station!.stationsList)
         }
     }
 
     func fetchTrainsFromSource(sourceCode: String, destinationCode: String) {
         _sourceStationCode = sourceCode
         _destinationStationCode = destinationCode
-        let urlString = "http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML?StationCode=\(sourceCode)"
-        if Reach().isNetworkReachable() {
-            Alamofire.request(urlString).response { (response) in
-                let stationData = try? XMLDecoder().decode(StationData.self, from: response.data!)
-                if let _trainsList = stationData?.trainsList {
-                    self.proceesTrainListforDestinationCheck(trainsList: _trainsList)
+
+        webService.fetchTrainsFromSource(sourceCode: sourceCode) { [weak self] stationData, error in
+            guard let strongSelf = self else { return }
+            DispatchQueue.main.async {
+                if let error = error {
+                    strongSelf.errorHandler(error: error)
+                } else if let trainsList = stationData?.trainsList {
+                    strongSelf.proceesTrainListforDestinationCheck(trainsList: trainsList)
                 } else {
-                    self.presenter!.showNoTrainAvailbilityFromSource()
+                    strongSelf.presenter?.showNoTrainAvailbilityFromSource()
                 }
             }
-        } else {
-            self.presenter!.showNoInterNetAvailabilityMessage()
         }
     }
-    
-    private func proceesTrainListforDestinationCheck(trainsList: [StationTrain]) {
-        var _trainsList = trainsList
-        let today = Date()
+
+    func errorHandler(error: WebServicesError) {
+        switch error {
+        case .networkNotReachable:
+            presenter?.showNoInternetAvailabilityMessage()
+        case .failedRequest, .invalidRequestURLString, .invalidResponseModel:
+            presenter?.showNoTrainAvailbilityFromSource()
+        }
+    }
+
+    func destinationTrain(movements: [TrainMovement]) -> TrainMovement? {
+            let sourceIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(_sourceStationCode) == .orderedSame })
+            let destinationIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(_destinationStationCode) == .orderedSame })
+            let desiredStationMoment = movements.filter { $0.locationCode.caseInsensitiveCompare(_destinationStationCode) == .orderedSame }
+            let isDestinationAvailable = desiredStationMoment.count == 1
+            
+            if isDestinationAvailable  && sourceIndex! < destinationIndex! {
+                return desiredStationMoment.first
+            } else {
+                return nil
+            }
+    }
+}
+
+private extension SearchTrainInteractor {
+    func proceesTrainListforDestinationCheck(trainsList: [StationTrain]) {
+        var allTrainsList = trainsList
         let group = DispatchGroup()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yyyy"
-        let dateString = formatter.string(from: today)
-        
+        let dateString = Date().toString(format: "dd/MM/yyyy")
+
         for index  in 0...trainsList.count-1 {
             group.enter()
-            let _urlString = "http://api.irishrail.ie/realtime/realtime.asmx/getTrainMovementsXML?TrainId=\(trainsList[index].trainCode)&TrainDate=\(dateString)"
-            if Reach().isNetworkReachable() {
-                Alamofire.request(_urlString).response { (movementsData) in
-                    let trainMovements = try? XMLDecoder().decode(TrainMovementsData.self, from: movementsData.data!)
 
-                    if let _movements = trainMovements?.trainMovements {
-                        let sourceIndex = _movements.firstIndex(where: {$0.locationCode.caseInsensitiveCompare(self._sourceStationCode) == .orderedSame})
-                        let destinationIndex = _movements.firstIndex(where: {$0.locationCode.caseInsensitiveCompare(self._destinationStationCode) == .orderedSame})
-                        let desiredStationMoment = _movements.filter{$0.locationCode.caseInsensitiveCompare(self._destinationStationCode) == .orderedSame}
-                        let isDestinationAvailable = desiredStationMoment.count == 1
-
-                        if isDestinationAvailable  && sourceIndex! < destinationIndex! {
-                            _trainsList[index].destinationDetails = desiredStationMoment.first
-                        }
-                    }
-                    group.leave()
+            WebService().getTrainMovements(trainCode: trainsList[index].trainCode, trainDate: dateString) { [weak self] trainMovementsData, _ in
+                guard let strongSelf = self else { return }
+                if let movements = trainMovementsData?.trainMovements {
+                    allTrainsList[index].destinationDetails = strongSelf.destinationTrain(movements: movements)
                 }
-            } else {
-                self.presenter!.showNoInterNetAvailabilityMessage()
+                group.leave()
             }
         }
 
         group.notify(queue: DispatchQueue.main) {
-            let sourceToDestinationTrains = _trainsList.filter{$0.destinationDetails != nil}
+            let sourceToDestinationTrains = allTrainsList.filter { $0.destinationDetails != nil }
             self.presenter!.fetchedTrainsList(trainsList: sourceToDestinationTrains)
         }
     }

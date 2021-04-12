@@ -12,64 +12,128 @@ import XCTest
 class SearchTrainPresenterTests: XCTestCase {
     var presenter: SearchTrainPresenter!
     var view = SearchTrainMockView()
-    var interactor = SearchTrainInteractorMock()
-    
+    var interactor: SearchTrainInteractorMock!
+
     override func setUp() {
-      presenter = SearchTrainPresenter()
+        let mockWebService = MockWebService()
+        interactor = SearchTrainInteractorMock(webService: mockWebService)
+        presenter = SearchTrainPresenter()
         presenter.view = view
         presenter.interactor = interactor
         interactor.presenter = presenter
     }
 
-    func testfetchallStations() {
-        presenter.fetchallStations()
-
-        XCTAssertTrue(view.isSaveFetchedStatinsCalled)
-    }
-
     override func tearDown() {
         presenter = nil
     }
+
+    func testfetchallStations() {
+        presenter.fetchallStations()
+        XCTAssertTrue(view.isSaveFetchedStatinsCalled)
+    }
+
+    func testSearchTrainPresenter_WhenSearchWithInvalidSourceOrDestinationGiven_shouldCallShowInvalidSourceOrDestinationAlert() {
+        // Arrange
+        let invalidSource = "ABC"
+        let invalidDestination = "XYZ"
+
+        // Act
+        presenter.searchTapped(source: invalidSource, destination: invalidDestination)
+
+        // Assert
+        XCTAssert(view.isShowInvalidSourceOrDestinationAlertCalled, "When invalid source or destination is provided `showInvalidSourceOrDestinationAlert` method should be called")
+
+    }
+
+    func testSearchTrainPresenter_WhenNoInternetIsAvailable_shouldCallShowInvalidSourceOrDestinationAlert() {
+        // Arrange
+        interactor.shouldReturnNoNetworkError = true
+        
+        // Act
+        interactor.fetchallStations()
+
+        // Assert
+        XCTAssert(view.isshowNoInternetAvailabilityMessageCalled, "When internet is not available `showNoInternetAvailabilityMessage` method should be called")
+    }
+    
+    func testFetch() {
+        interactor.fetchallStations()
+    }
 }
 
-
-class SearchTrainMockView:PresenterToViewProtocol {
+class SearchTrainMockView: PresenterToViewProtocol {
     var isSaveFetchedStatinsCalled = false
+    var isShowInvalidSourceOrDestinationAlertCalled = false
+    var isshowNoTrainsFoundAlertCalled = false
+    var isShowNoTrainAvailbilityFromSourceCalled = false
+    var isshowNoInternetAvailabilityMessageCalled = false
 
     func saveFetchedStations(stations: [Station]?) {
         isSaveFetchedStatinsCalled = true
     }
 
     func showInvalidSourceOrDestinationAlert() {
-
+        isShowInvalidSourceOrDestinationAlertCalled = true
     }
-    
+
     func updateLatestTrainList(trainsList: [StationTrain]) {
 
     }
-    
+
     func showNoTrainsFoundAlert() {
-
+        isshowNoTrainsFoundAlertCalled = true
     }
-    
+
     func showNoTrainAvailbilityFromSource() {
-
+        isShowNoTrainAvailbilityFromSourceCalled = true
     }
-    
-    func showNoInterNetAvailabilityMessage() {
+
+    func showNoInternetAvailabilityMessage() {
+        isshowNoInternetAvailabilityMessageCalled = true
+    }
+
+}
+
+class SearchTrainInteractorMock: PresenterToInteractorProtocol {
+    var webService: WebServiceProtocol
+    var shouldReturnNoNetworkError = false
+
+    var presenter: InteractorToPresenterProtocol?
+
+    required init(webService: WebServiceProtocol) {
+        self.webService = webService
+    }
+
+    func fetchallStations() {
+        if shouldReturnNoNetworkError {
+            presenter?.showNoInternetAvailabilityMessage()
+        } else {
+            let station = Station(desc: "Belfast Central", latitude: 54.6123, longitude: -5.91744, code: "BFSTC", stationId: 228)
+            presenter?.stationListFetched(list: [station])
+        }
+    }
+
+    func fetchTrainsFromSource(sourceCode: String, destinationCode: String) {
 
     }
 }
 
-class SearchTrainInteractorMock:PresenterToInteractorProtocol {
-    var presenter: InteractorToPresenterProtocol?
+class MockWebService: WebServiceProtocol {
+    var shouldReturnNoNetworkError = false
 
-    func fetchallStations() {
-        let station = Station(desc: "Belfast Central", latitude: 54.6123, longitude: -5.91744, code: "BFSTC", stationId: 228)
-        presenter?.stationListFetched(list: [station])
+    func fetchallStations(completionHandler: @escaping (Stations?, WebServicesError?) -> Void) {
+        if shouldReturnNoNetworkError {
+            completionHandler(nil, .networkNotReachable)
+        } else {
+
+        }
     }
 
-    func fetchTrainsFromSource(sourceCode: String, destinationCode: String) {
+    func fetchTrainsFromSource(sourceCode: String, completionHandler: @escaping (StationData?, WebServicesError?) -> Void) {
+
+    }
+
+    func getTrainMovements(trainCode: String, trainDate: String, completionHandler: @escaping (TrainMovementsData?, WebServicesError?) -> Void) {
 
     }
 }

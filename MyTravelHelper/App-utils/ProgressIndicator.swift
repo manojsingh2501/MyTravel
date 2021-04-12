@@ -7,8 +7,6 @@
 //
 
 import Foundation
-
-import Foundation
 import UIKit
 
 class ProgressIndicator: UIVisualEffectView {
@@ -19,7 +17,7 @@ class ProgressIndicator: UIVisualEffectView {
         }
     }
 
-    let activityIndictor: UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
+    let activityIndictor: UIActivityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
     let label: UILabel = UILabel()
     let blurEffect = UIBlurEffect(style: .dark)
     let vibrancyView: UIVisualEffectView
