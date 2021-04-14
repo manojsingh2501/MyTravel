@@ -14,7 +14,8 @@ class SearchTrainViewController: UIViewController {
     @IBOutlet weak var destinationTextField: UITextField!
     @IBOutlet weak var sourceTxtField: UITextField!
     @IBOutlet weak var trainsListTable: UITableView!
-
+    @IBOutlet weak var searchButton: UIButton!
+    
     var stationsList: [Station] = [Station]()
     var trains: [StationTrain] = [StationTrain]()
     var presenter: ViewToPresenterProtocol?
@@ -39,29 +40,35 @@ class SearchTrainViewController: UIViewController {
         showProgressIndicator(view: self.view)
         presenter?.searchTapped(source: transitPoints.source, destination: transitPoints.destination)
     }
-}
-
-extension SearchTrainViewController: PresenterToViewProtocol {
-    func showNoInternetAvailabilityMessage() {
-        trainsListTable.isHidden = true
-        hideProgressIndicator(view: view)
-        showAlert(title: Alert.NoInternet.title, message: Alert.NoInternet.message, actionTitle: Alert.actionTitle)
-    }
-
-    func showNoTrainAvailbilityFromSource() {
-        trainsListTable.isHidden = true
-        hideProgressIndicator(view: view)
-        showAlert(title: Alert.NoTrainAvailbility.title, message: Alert.NoTrainAvailbility.message, actionTitle: Alert.actionTitle)
-    }
-
+    
     func updateLatestTrainList(trainsList: [StationTrain]) {
         hideProgressIndicator(view: view)
         trains = trainsList
         trainsListTable.isHidden = false
         trainsListTable.reloadData()
     }
+}
 
-    func showNoTrainsFoundAlert() {
+extension SearchTrainViewController: PresenterToViewProtocol {
+    @objc func showFailedToFetchAllStaionsMessage() {
+        trainsListTable.isHidden = true
+        hideProgressIndicator(view: view)
+        showAlert(title: Alert.NoStations.title, message: Alert.NoStations.message, actionTitle: Alert.actionTitle)
+    }
+    
+    @objc func showNoInternetAvailabilityMessage() {
+        trainsListTable.isHidden = true
+        hideProgressIndicator(view: view)
+        showAlert(title: Alert.NoInternet.title, message: Alert.NoInternet.message, actionTitle: Alert.actionTitle)
+    }
+
+    @objc func showNoTrainAvailbilityFromSource() {
+        trainsListTable.isHidden = true
+        hideProgressIndicator(view: view)
+        showAlert(title: Alert.NoTrainAvailbility.title, message: Alert.NoTrainAvailbility.message, actionTitle: Alert.actionTitle)
+    }
+
+    @objc func showNoTrainsFoundAlert() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         trainsListTable.isHidden = true
@@ -74,7 +81,7 @@ extension SearchTrainViewController: PresenterToViewProtocol {
         present(alert, animated: true, completion: nil)
     }
 
-    func showInvalidSourceOrDestinationAlert() {
+    @objc func showInvalidSourceOrDestinationAlert() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         showAlert(title: Alert.InvalidSourceOrDestination.title, message: Alert.InvalidSourceOrDestination.message, actionTitle: Alert.actionTitle)

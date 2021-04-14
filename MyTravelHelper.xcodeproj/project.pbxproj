@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,11 @@
 		565677922623E65500202E69 /* AllStations.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5656778D2623E65500202E69 /* AllStations.xml */; };
 		565677932623E65500202E69 /* StationDataForTrainCode_BFSTC.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5656778E2623E65500202E69 /* StationDataForTrainCode_BFSTC.xml */; };
 		565677A12623E74B00202E69 /* WebServicesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565677A02623E74B00202E69 /* WebServicesError.swift */; };
+		565677B72625341100202E69 /* SearchTrainInteractorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565677B62625341100202E69 /* SearchTrainInteractorTest.swift */; };
+		565677BC26253DDF00202E69 /* MockWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565677BB26253DDF00202E69 /* MockWebService.swift */; };
+		565677C22625450D00202E69 /* SearchTrainPresenterMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565677C12625450D00202E69 /* SearchTrainPresenterMock.swift */; };
+		565677C6262555AA00202E69 /* TestUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565677C5262555AA00202E69 /* TestUtility.swift */; };
+		565677CA2625AC5E00202E69 /* SearchTrainViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565677C92625AC5E00202E69 /* SearchTrainViewControllerTest.swift */; };
 		753C8FA422361EC9005FF13B /* TrainMovements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753C8FA122361EC9005FF13B /* TrainMovements.swift */; };
 		753C8FA522361EC9005FF13B /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753C8FA222361EC9005FF13B /* StationInfo.swift */; };
 		753C8FA622361EC9005FF13B /* Stations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753C8FA322361EC9005FF13B /* Stations.swift */; };
@@ -61,6 +66,11 @@
 		5656778D2623E65500202E69 /* AllStations.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AllStations.xml; sourceTree = "<group>"; };
 		5656778E2623E65500202E69 /* StationDataForTrainCode_BFSTC.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = StationDataForTrainCode_BFSTC.xml; sourceTree = "<group>"; };
 		565677A02623E74B00202E69 /* WebServicesError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServicesError.swift; sourceTree = "<group>"; };
+		565677B62625341100202E69 /* SearchTrainInteractorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTrainInteractorTest.swift; sourceTree = "<group>"; };
+		565677BB26253DDF00202E69 /* MockWebService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWebService.swift; sourceTree = "<group>"; };
+		565677C12625450D00202E69 /* SearchTrainPresenterMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTrainPresenterMock.swift; sourceTree = "<group>"; };
+		565677C5262555AA00202E69 /* TestUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtility.swift; sourceTree = "<group>"; };
+		565677C92625AC5E00202E69 /* SearchTrainViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTrainViewControllerTest.swift; sourceTree = "<group>"; };
 		753C8FA122361EC9005FF13B /* TrainMovements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainMovements.swift; sourceTree = "<group>"; };
 		753C8FA222361EC9005FF13B /* StationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
 		753C8FA322361EC9005FF13B /* Stations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stations.swift; sourceTree = "<group>"; };
@@ -153,6 +163,15 @@
 			path = MockData;
 			sourceTree = "<group>";
 		};
+		565677BA26253D9500202E69 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				565677BB26253DDF00202E69 /* MockWebService.swift */,
+				565677C12625450D00202E69 /* SearchTrainPresenterMock.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		5DCA91A6E1C4EF2A4B4FE637 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,11 +228,15 @@
 		753F085A223618AE00175107 /* MyTravelHelperTests */ = {
 			isa = PBXGroup;
 			children = (
+				565677BA26253D9500202E69 /* Mock */,
 				5656778B2623E65500202E69 /* MockData */,
 				565677892623E65500202E69 /* MockURLProtocol.swift */,
 				5656778A2623E65500202E69 /* WebServiceTests.swift */,
 				753C8FBD2237367E005FF13B /* SearchTrainPresenterTests.swift */,
 				753F085D223618AE00175107 /* Info.plist */,
+				565677B62625341100202E69 /* SearchTrainInteractorTest.swift */,
+				565677C5262555AA00202E69 /* TestUtility.swift */,
+				565677C92625AC5E00202E69 /* SearchTrainViewControllerTest.swift */,
 			);
 			path = MyTravelHelperTests;
 			sourceTree = "<group>";
@@ -449,23 +472,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MyTravelHelper/Pods-MyTravelHelper-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftSpinner/SwiftSpinner.framework",
-				"${BUILT_PRODUCTS_DIR}/XMLParsing/XMLParsing.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyTravelHelper/Pods-MyTravelHelper-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSpinner.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XMLParsing.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MyTravelHelper/Pods-MyTravelHelper-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MyTravelHelper/Pods-MyTravelHelper-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MyTravelHelper/Pods-MyTravelHelper-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -501,6 +517,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				753C8FBE2237367E005FF13B /* SearchTrainPresenterTests.swift in Sources */,
+				565677BC26253DDF00202E69 /* MockWebService.swift in Sources */,
+				565677C6262555AA00202E69 /* TestUtility.swift in Sources */,
+				565677B72625341100202E69 /* SearchTrainInteractorTest.swift in Sources */,
+				565677C22625450D00202E69 /* SearchTrainPresenterMock.swift in Sources */,
+				565677CA2625AC5E00202E69 /* SearchTrainViewControllerTest.swift in Sources */,
 				565677902623E65500202E69 /* WebServiceTests.swift in Sources */,
 				5656778F2623E65500202E69 /* MockURLProtocol.swift in Sources */,
 			);

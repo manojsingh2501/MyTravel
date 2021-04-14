@@ -23,6 +23,7 @@ protocol PresenterToViewProtocol: class {
     func showNoTrainsFoundAlert()
     func showNoTrainAvailbilityFromSource()
     func showNoInternetAvailabilityMessage()
+    func showFailedToFetchAllStaionsMessage()
 }
 
 protocol PresenterToRouterProtocol: class {
@@ -42,6 +43,7 @@ protocol InteractorToPresenterProtocol: class {
     func fetchedTrainsList(trainsList: [StationTrain]?)
     func showNoTrainAvailbilityFromSource()
     func showNoInternetAvailabilityMessage()
+    func failedToFetchAllStaions()
 }
 
 protocol WebServiceProtocol: class {

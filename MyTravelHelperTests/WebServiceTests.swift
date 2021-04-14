@@ -28,7 +28,7 @@ class WebServiceTests: XCTestCase {
     func testWebservice_WhenSuccessfulResponseGiven_ShouldFetchAllStations() {
         // Arrange
         let totalNumberOfStations = 167
-        let xmlData = dataFromFile(fileName: "AllStations", ofType: ".xml")
+        let xmlData = TestUtility.dataFromFile(fileName: "AllStations", ofType: ".xml")
         MockURLProtocol.stubResponseData = xmlData
         let expectation = self.expectation(description: "Fetch all stations expectation")
 
@@ -46,7 +46,7 @@ class WebServiceTests: XCTestCase {
         // Arrange
         let numberOfStaionTrains = 1
         let trainSourceCode = "BFSTC"
-        let xmlData = dataFromFile(fileName: "StationDataForTrainCode_BFSTC", ofType: ".xml")
+        let xmlData = TestUtility.dataFromFile(fileName: "StationDataForTrainCode_BFSTC", ofType: ".xml")
         MockURLProtocol.stubResponseData = xmlData
         let expectation = self.expectation(description: "Fetch all station trains for source station code `BFSTC` expectation")
 
@@ -64,7 +64,7 @@ class WebServiceTests: XCTestCase {
         // Arrange
         let trainID = "A149"
         let dateString = Date().toString(format: "dd/MM/yyyy")
-        let allStationXMLData = dataFromFile(fileName: "TrainMovementForTrainID_A149", ofType: ".xml")
+        let allStationXMLData = TestUtility.dataFromFile(fileName: "TrainMovementForTrainID_A149", ofType: ".xml")
         MockURLProtocol.stubResponseData = allStationXMLData
         let expectation = self.expectation(description: "Fetch all train movements expectation")
 
@@ -76,13 +76,5 @@ class WebServiceTests: XCTestCase {
         }
 
         self.wait(for: [expectation], timeout: 5.0)
-    }
-
-    func dataFromFile(fileName: String, ofType: String) -> Data? {
-        let bundle = Bundle(for: WebServiceTests.self)
-        guard let path = bundle.path(forResource: fileName, ofType: ofType) else {
-            return nil
-        }
-        return try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
     }
 }

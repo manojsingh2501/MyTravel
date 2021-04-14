@@ -21,8 +21,11 @@ class SearchTrainInteractor: PresenterToInteractorProtocol {
 
     func fetchallStations() {
         webService.fetchallStations { [weak self] station, _ in
-            guard let strongSelf = self else { return }
-            strongSelf.presenter!.stationListFetched(list: station!.stationsList)
+            if let station = station {
+                self?.presenter?.stationListFetched(list: station.stationsList)
+            } else {
+                self?.presenter?.failedToFetchAllStaions()
+            }
         }
     }
 
@@ -44,15 +47,29 @@ class SearchTrainInteractor: PresenterToInteractorProtocol {
         }
     }
 
-    func errorHandler(error: WebServicesError) {
-        switch error {
-        case .networkNotReachable:
-            presenter?.showNoInternetAvailabilityMessage()
-        case .failedRequest, .invalidRequestURLString, .invalidResponseModel:
-            presenter?.showNoTrainAvailbilityFromSource()
+    func proceesTrainListforDestinationCheck(trainsList: [StationTrain]) {
+        var allTrainsList = trainsList
+        let group = DispatchGroup()
+        let dateString = Date().toString(format: "dd/MM/yyyy")
+
+        for index  in 0...trainsList.count-1 {
+            group.enter()
+            webService.getTrainMovements(trainCode: trainsList[index].trainCode, trainDate: dateString) { [weak self] trainMovementsData, _ in
+                guard let strongSelf = self else { return }
+                if let movements = trainMovementsData?.trainMovements {
+                    allTrainsList[index].destinationDetails = strongSelf.destinationTrain(movements: movements)
+                }
+                group.leave()
+            }
+        }
+        
+
+        group.notify(queue: DispatchQueue.main) {
+            let sourceToDestinationTrains = allTrainsList.filter { $0.destinationDetails != nil }
+            self.presenter?.fetchedTrainsList(trainsList: sourceToDestinationTrains)
         }
     }
-
+    
     func destinationTrain(movements: [TrainMovement]) -> TrainMovement? {
             let sourceIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(_sourceStationCode) == .orderedSame })
             let destinationIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(_destinationStationCode) == .orderedSame })
@@ -65,29 +82,13 @@ class SearchTrainInteractor: PresenterToInteractorProtocol {
                 return nil
             }
     }
-}
 
-private extension SearchTrainInteractor {
-    func proceesTrainListforDestinationCheck(trainsList: [StationTrain]) {
-        var allTrainsList = trainsList
-        let group = DispatchGroup()
-        let dateString = Date().toString(format: "dd/MM/yyyy")
-
-        for index  in 0...trainsList.count-1 {
-            group.enter()
-
-            WebService().getTrainMovements(trainCode: trainsList[index].trainCode, trainDate: dateString) { [weak self] trainMovementsData, _ in
-                guard let strongSelf = self else { return }
-                if let movements = trainMovementsData?.trainMovements {
-                    allTrainsList[index].destinationDetails = strongSelf.destinationTrain(movements: movements)
-                }
-                group.leave()
-            }
-        }
-
-        group.notify(queue: DispatchQueue.main) {
-            let sourceToDestinationTrains = allTrainsList.filter { $0.destinationDetails != nil }
-            self.presenter!.fetchedTrainsList(trainsList: sourceToDestinationTrains)
+    func errorHandler(error: WebServicesError) {
+        switch error {
+        case .networkNotReachable:
+            presenter?.showNoInternetAvailabilityMessage()
+        case .failedRequest, .invalidRequestURLString, .invalidResponseModel:
+            presenter?.showNoTrainAvailbilityFromSource()
         }
     }
 }

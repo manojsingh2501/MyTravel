@@ -20,6 +20,11 @@ struct Alert {
         static let title = "No Trains"
         static let message = "Sorry No trains arriving source station in another 90 mins"
     }
+
+    struct NoStations {
+        static let title = "No Stations"
+        static let message = "Sorry, something went wrong, failed to fetch all stations"
+    }
     
     struct NoTrainsFound {
         static let title = "No Trains"

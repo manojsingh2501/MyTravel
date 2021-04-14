@@ -24,3 +24,7 @@ enum WebServicesError: LocalizedError, Equatable {
         }
     }
 }
+
+enum SearchTrainError: LocalizedError, Equatable {
+    case noTrainAvailability
+}

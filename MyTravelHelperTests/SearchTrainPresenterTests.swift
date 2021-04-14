@@ -56,8 +56,8 @@ class SearchTrainPresenterTests: XCTestCase {
         XCTAssert(view.isshowNoInternetAvailabilityMessageCalled, "When internet is not available `showNoInternetAvailabilityMessage` method should be called")
     }
     
-    func testFetch() {
-        interactor.fetchallStations()
+    func testTrainPresenter_WhenFetchAllStaion_StationListFetchedCall() {
+//        interactor.fetchallStations()
     }
 }
 
@@ -78,6 +78,10 @@ class SearchTrainMockView: PresenterToViewProtocol {
 
     func updateLatestTrainList(trainsList: [StationTrain]) {
 
+    }
+
+    func showFailedToFetchAllStaionsMessage() {
+        
     }
 
     func showNoTrainsFoundAlert() {
@@ -114,26 +118,6 @@ class SearchTrainInteractorMock: PresenterToInteractorProtocol {
     }
 
     func fetchTrainsFromSource(sourceCode: String, destinationCode: String) {
-
-    }
-}
-
-class MockWebService: WebServiceProtocol {
-    var shouldReturnNoNetworkError = false
-
-    func fetchallStations(completionHandler: @escaping (Stations?, WebServicesError?) -> Void) {
-        if shouldReturnNoNetworkError {
-            completionHandler(nil, .networkNotReachable)
-        } else {
-
-        }
-    }
-
-    func fetchTrainsFromSource(sourceCode: String, completionHandler: @escaping (StationData?, WebServicesError?) -> Void) {
-
-    }
-
-    func getTrainMovements(trainCode: String, trainDate: String, completionHandler: @escaping (TrainMovementsData?, WebServicesError?) -> Void) {
 
     }
 }

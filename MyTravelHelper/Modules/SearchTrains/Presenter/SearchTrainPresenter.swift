@@ -53,4 +53,8 @@ extension SearchTrainPresenter: InteractorToPresenterProtocol {
         stationsList = list
         view?.saveFetchedStations(stations: list)
     }
+
+    func failedToFetchAllStaions() {
+        view?.showFailedToFetchAllStaionsMessage()
+    }
 }

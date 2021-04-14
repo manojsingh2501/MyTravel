@@ -188,6 +188,7 @@
                     </view>
                     <connections>
                         <outlet property="destinationTextField" destination="PcD-qO-M9L" id="mWk-Lt-piK"/>
+                        <outlet property="searchButton" destination="hqT-Ku-6NI" id="Dev-Hn-nJ6"/>
                         <outlet property="sourceTxtField" destination="W27-5y-G6c" id="CJZ-Fn-AdG"/>
                         <outlet property="trainsListTable" destination="uhV-3e-Ofc" id="3e4-c3-P0u"/>
                     </connections>
