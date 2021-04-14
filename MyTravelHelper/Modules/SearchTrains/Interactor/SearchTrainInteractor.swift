@@ -10,8 +10,8 @@ import Foundation
 import XMLParsing
 
 class SearchTrainInteractor: PresenterToInteractorProtocol {
-    var _sourceStationCode = String()
-    var _destinationStationCode = String()
+    var sourceStationCode = String()
+    var destinationStationCode = String()
     weak var presenter: InteractorToPresenterProtocol?
     var webService: WebServiceProtocol
 
@@ -21,17 +21,18 @@ class SearchTrainInteractor: PresenterToInteractorProtocol {
 
     func fetchallStations() {
         webService.fetchallStations { [weak self] station, _ in
+            guard let strongSelf = self else { return }
             if let station = station {
-                self?.presenter?.stationListFetched(list: station.stationsList)
+                strongSelf.presenter?.stationListFetched(list: station.stationsList)
             } else {
-                self?.presenter?.failedToFetchAllStaions()
+                strongSelf.presenter?.failedToFetchAllStaions()
             }
         }
     }
 
     func fetchTrainsFromSource(sourceCode: String, destinationCode: String) {
-        _sourceStationCode = sourceCode
-        _destinationStationCode = destinationCode
+        sourceStationCode = sourceCode
+        destinationStationCode = destinationCode
 
         webService.fetchTrainsFromSource(sourceCode: sourceCode) { [weak self] stationData, error in
             guard let strongSelf = self else { return }
@@ -52,7 +53,7 @@ class SearchTrainInteractor: PresenterToInteractorProtocol {
         let group = DispatchGroup()
         let dateString = Date().toString(format: "dd/MM/yyyy")
 
-        for index  in 0...trainsList.count-1 {
+        for index  in 0...trainsList.count - 1 {
             group.enter()
             webService.getTrainMovements(trainCode: trainsList[index].trainCode, trainDate: dateString) { [weak self] trainMovementsData, _ in
                 guard let strongSelf = self else { return }
@@ -62,21 +63,24 @@ class SearchTrainInteractor: PresenterToInteractorProtocol {
                 group.leave()
             }
         }
-        
 
         group.notify(queue: DispatchQueue.main) {
             let sourceToDestinationTrains = allTrainsList.filter { $0.destinationDetails != nil }
             self.presenter?.fetchedTrainsList(trainsList: sourceToDestinationTrains)
         }
     }
-    
+
     func destinationTrain(movements: [TrainMovement]) -> TrainMovement? {
-            let sourceIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(_sourceStationCode) == .orderedSame })
-            let destinationIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(_destinationStationCode) == .orderedSame })
-            let desiredStationMoment = movements.filter { $0.locationCode.caseInsensitiveCompare(_destinationStationCode) == .orderedSame }
+            guard let sourceIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(sourceStationCode) == .orderedSame }),
+                  let destinationIndex = movements.firstIndex(where: { $0.locationCode.caseInsensitiveCompare(destinationStationCode) == .orderedSame })
+            else {
+                return nil
+            }
+
+            let desiredStationMoment = movements.filter { $0.locationCode.caseInsensitiveCompare(destinationStationCode) == .orderedSame }
             let isDestinationAvailable = desiredStationMoment.count == 1
-            
-            if isDestinationAvailable  && sourceIndex! < destinationIndex! {
+
+            if isDestinationAvailable && sourceIndex < destinationIndex {
                 return desiredStationMoment.first
             } else {
                 return nil

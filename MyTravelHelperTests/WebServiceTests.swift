@@ -6,13 +6,14 @@
 //  Copyright © 2021 Sample. All rights reserved.
 //
 
-import XCTest
 @testable import MyTravelHelper
+import XCTest
 
 class WebServiceTests: XCTestCase {
     var sut: WebService!
 
     override func setUp() {
+        super.setUp()
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
         let urlSession = URLSession(configuration: config)
@@ -20,6 +21,7 @@ class WebServiceTests: XCTestCase {
     }
 
     override func tearDown() {
+        super.tearDown()
         sut = nil
         MockURLProtocol.stubResponseData = nil
         MockURLProtocol.error = nil

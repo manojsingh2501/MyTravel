@@ -9,9 +9,10 @@
 import UIKit
 
 protocol ViewToPresenterProtocol: class {
-    var view: PresenterToViewProtocol? {get set}
-    var interactor: PresenterToInteractorProtocol? {get set}
-    var router: PresenterToRouterProtocol? {get set}
+    var view: PresenterToViewProtocol? { get set }
+    var interactor: PresenterToInteractorProtocol? { get set }
+    var router: PresenterToRouterProtocol? { get set }
+
     func fetchallStations()
     func searchTapped(source: String, destination: String)
 }
@@ -32,8 +33,10 @@ protocol PresenterToRouterProtocol: class {
 
 protocol PresenterToInteractorProtocol: class {
     init(webService: WebServiceProtocol)
+
     var webService: WebServiceProtocol { get }
     var presenter: InteractorToPresenterProtocol? { get set }
+
     func fetchallStations()
     func fetchTrainsFromSource(sourceCode: String, destinationCode: String)
 }

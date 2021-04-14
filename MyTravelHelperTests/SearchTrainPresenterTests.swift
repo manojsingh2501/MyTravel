@@ -6,8 +6,8 @@
 //  Copyright © 2019 Sample. All rights reserved.
 //
 
-import XCTest
 @testable import MyTravelHelper
+import XCTest
 
 class SearchTrainPresenterTests: XCTestCase {
     var presenter: SearchTrainPresenter!
@@ -15,6 +15,7 @@ class SearchTrainPresenterTests: XCTestCase {
     var interactor: SearchTrainInteractorMock!
 
     override func setUp() {
+        super.setUp()
         let mockWebService = MockWebService()
         interactor = SearchTrainInteractorMock(webService: mockWebService)
         presenter = SearchTrainPresenter()
@@ -24,6 +25,7 @@ class SearchTrainPresenterTests: XCTestCase {
     }
 
     override func tearDown() {
+        super.tearDown()
         presenter = nil
     }
 
@@ -41,26 +43,29 @@ class SearchTrainPresenterTests: XCTestCase {
         presenter.searchTapped(source: invalidSource, destination: invalidDestination)
 
         // Assert
-        XCTAssert(view.isShowInvalidSourceOrDestinationAlertCalled, "When invalid source or destination is provided `showInvalidSourceOrDestinationAlert` method should be called")
+        XCTAssert(view.isShowInvalidSourceOrDestinationAlertCalled,
+                  "When invalid source or destination is provided `showInvalidSourceOrDestinationAlert` method should be called")
 
     }
 
     func testSearchTrainPresenter_WhenNoInternetIsAvailable_shouldCallShowInvalidSourceOrDestinationAlert() {
         // Arrange
         interactor.shouldReturnNoNetworkError = true
-        
+
         // Act
         interactor.fetchallStations()
 
         // Assert
-        XCTAssert(view.isshowNoInternetAvailabilityMessageCalled, "When internet is not available `showNoInternetAvailabilityMessage` method should be called")
+        XCTAssert(view.isshowNoInternetAvailabilityMessageCalled,
+                  "When internet is not available `showNoInternetAvailabilityMessage` method should be called")
     }
-    
+
     func testTrainPresenter_WhenFetchAllStaion_StationListFetchedCall() {
-//        interactor.fetchallStations()
+        interactor.fetchallStations()
     }
 }
 
+// swiftlint:disable identifier_name
 class SearchTrainMockView: PresenterToViewProtocol {
     var isSaveFetchedStatinsCalled = false
     var isShowInvalidSourceOrDestinationAlertCalled = false
@@ -81,7 +86,7 @@ class SearchTrainMockView: PresenterToViewProtocol {
     }
 
     func showFailedToFetchAllStaionsMessage() {
-        
+
     }
 
     func showNoTrainsFoundAlert() {
@@ -97,6 +102,7 @@ class SearchTrainMockView: PresenterToViewProtocol {
     }
 
 }
+// swiftlint:enable identifier_name
 
 class SearchTrainInteractorMock: PresenterToInteractorProtocol {
     var webService: WebServiceProtocol
@@ -112,7 +118,12 @@ class SearchTrainInteractorMock: PresenterToInteractorProtocol {
         if shouldReturnNoNetworkError {
             presenter?.showNoInternetAvailabilityMessage()
         } else {
-            let station = Station(desc: "Belfast Central", latitude: 54.6123, longitude: -5.91744, code: "BFSTC", stationId: 228)
+            let latitude = 54.6123
+            let longitude = -5.917_44
+            let code = "BFSTC"
+            let stationId = 228
+
+            let station = Station(desc: "Belfast Central", latitude: latitude, longitude: longitude, code: code, stationId: stationId)
             presenter?.stationListFetched(list: [station])
         }
     }

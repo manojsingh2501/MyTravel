@@ -9,6 +9,7 @@ target 'MyTravelHelper' do
   pod 'XMLParsing', :git => 'https://github.com/ShawnMoore/XMLParsing.git'
   pod 'DropDown'
   pod 'SwiftSpinner'
+  pod 'SwiftLint'
 
   target 'MyTravelHelperTests' do
     inherit! :search_paths

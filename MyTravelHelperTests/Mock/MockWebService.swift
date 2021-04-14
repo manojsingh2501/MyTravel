@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import XCTest
 @testable import MyTravelHelper
+import XCTest
 
 class MockWebService: WebServiceProtocol {
     var shouldShowError = false
@@ -24,7 +24,7 @@ class MockWebService: WebServiceProtocol {
     }
 
     func fetchTrainsFromSource(sourceCode: String, completionHandler: @escaping (StationData?, WebServicesError?) -> Void) {
-        
+
         if shouldShowError {
             completionHandler(nil, .networkNotReachable)
             expectation?.fulfill()

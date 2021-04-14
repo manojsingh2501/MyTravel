@@ -9,6 +9,7 @@
 import UIKit
 class SearchTrainRouter: PresenterToRouterProtocol {
     static func createModule() -> SearchTrainViewController {
+        // swiftlint:disable force_cast
         let viewController = mainstoryboard.instantiateViewController(withIdentifier: "searchTrain") as! SearchTrainViewController
         let presenter: ViewToPresenterProtocol & InteractorToPresenterProtocol = SearchTrainPresenter()
         let webservice = WebService()

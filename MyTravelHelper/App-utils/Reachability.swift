@@ -1,3 +1,4 @@
+
 // The MIT License (MIT)
 //
 // Copyright (c) 2015 Isuru Nanayakkara
@@ -76,15 +77,15 @@ open class Reach {
     func monitorReachabilityChanges() {
         let host = "google.com"
         var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
-        let reachability = SCNetworkReachabilityCreateWithName(nil, host)!
+        guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else { return }
 
-        SCNetworkReachabilitySetCallback(reachability, { (_, flags, _) in
+        SCNetworkReachabilitySetCallback(reachability, { _, flags, _ in
             let status = ReachabilityStatus(reachabilityFlags: flags)
 
             NotificationCenter.default.post(name: Notification.Name(rawValue: reachabilityStatusChangedNotification),
-                object: nil,
-                userInfo: ["Status": status.description])
-            
+                                            object: nil,
+                                            userInfo: ["Status": status.description])
+
             }, &context)
 
         SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
@@ -92,7 +93,7 @@ open class Reach {
 
     func isNetworkReachable() -> Bool {
         let status = connectionStatus()
-        
+
         switch status {
         case .unknown, .offline:
             return false

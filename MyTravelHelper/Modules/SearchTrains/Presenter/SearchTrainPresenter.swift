@@ -27,7 +27,7 @@ class SearchTrainPresenter: ViewToPresenterProtocol {
     }
 
     private func getStationCode(stationName: String) -> String? {
-        let stationCode = stationsList.filter { $0.stationDesc == stationName }.first
+        let stationCode = stationsList.first { $0.stationDesc == stationName }
         return stationCode?.stationCode.lowercased()
     }
 }
@@ -42,13 +42,13 @@ extension SearchTrainPresenter: InteractorToPresenterProtocol {
     }
 
     func fetchedTrainsList(trainsList: [StationTrain]?) {
-        if let _trainsList = trainsList {
-            view?.updateLatestTrainList(trainsList: _trainsList)
+        if let trainsList = trainsList {
+            view?.updateLatestTrainList(trainsList: trainsList)
         } else {
             view?.showNoTrainsFoundAlert()
         }
     }
-    
+
     func stationListFetched(list: [Station]) {
         stationsList = list
         view?.saveFetchedStations(stations: list)

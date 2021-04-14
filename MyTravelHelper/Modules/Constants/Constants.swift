@@ -10,7 +10,7 @@ import Foundation
 
 struct Alert {
     static let actionTitle = "Okay"
-    
+
     struct NoInternet {
         static let title = "No Internet"
         static let message = "Please Check your internet connection and try again"
@@ -25,7 +25,7 @@ struct Alert {
         static let title = "No Stations"
         static let message = "Sorry, something went wrong, failed to fetch all stations"
     }
-    
+
     struct NoTrainsFound {
         static let title = "No Trains"
         static let message = "Sorry No trains Found from source to destination in another 90 mins"
@@ -35,7 +35,7 @@ struct Alert {
         static let title = "Invalid Source/Destination"
         static let message = "Invalid Source or Destination Station names Please Check"
     }
-    
+
     static let loadingStationMessage = "Please wait loading station list ...."
 }
 

@@ -6,21 +6,23 @@
 //  Copyright © 2019 Sample. All rights reserved.
 //
 
-import UIKit
-import SwiftSpinner
 import DropDown
+import SwiftSpinner
+import UIKit
 
+// swiftlint:disable private_outlet
 class SearchTrainViewController: UIViewController {
     @IBOutlet weak var destinationTextField: UITextField!
     @IBOutlet weak var sourceTxtField: UITextField!
     @IBOutlet weak var trainsListTable: UITableView!
     @IBOutlet weak var searchButton: UIButton!
-    
+
     var stationsList: [Station] = [Station]()
     var trains: [StationTrain] = [StationTrain]()
     var presenter: ViewToPresenterProtocol?
     var dropDown = DropDown()
     var transitPoints: (source: String, destination: String) = ("", "")
+    var alertViewController: UIAlertController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,7 @@ class SearchTrainViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if stationsList.count == 0 {
             SwiftSpinner.useContainerView(view)
             SwiftSpinner.show(Alert.loadingStationMessage)
@@ -35,12 +38,13 @@ class SearchTrainViewController: UIViewController {
         }
     }
 
+    // swiftlint:disable private_action
     @IBAction func searchTrainsTapped(_ sender: Any) {
         view.endEditing(true)
         showProgressIndicator(view: self.view)
         presenter?.searchTapped(source: transitPoints.source, destination: transitPoints.destination)
     }
-    
+
     func updateLatestTrainList(trainsList: [StationTrain]) {
         hideProgressIndicator(view: view)
         trains = trainsList
@@ -48,40 +52,43 @@ class SearchTrainViewController: UIViewController {
         trainsListTable.reloadData()
     }
 }
+// swiftlint:enable private_outlet
 
 extension SearchTrainViewController: PresenterToViewProtocol {
-    @objc func showFailedToFetchAllStaionsMessage() {
+    func showFailedToFetchAllStaionsMessage() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         showAlert(title: Alert.NoStations.title, message: Alert.NoStations.message, actionTitle: Alert.actionTitle)
     }
-    
-    @objc func showNoInternetAvailabilityMessage() {
+
+    func showNoInternetAvailabilityMessage() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         showAlert(title: Alert.NoInternet.title, message: Alert.NoInternet.message, actionTitle: Alert.actionTitle)
     }
 
-    @objc func showNoTrainAvailbilityFromSource() {
+    func showNoTrainAvailbilityFromSource() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         showAlert(title: Alert.NoTrainAvailbility.title, message: Alert.NoTrainAvailbility.message, actionTitle: Alert.actionTitle)
     }
 
-    @objc func showNoTrainsFoundAlert() {
+    func showNoTrainsFoundAlert() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         trainsListTable.isHidden = true
         showAlert(title: Alert.NoTrainsFound.title, message: Alert.NoTrainsFound.message, actionTitle: Alert.actionTitle)
     }
 
-    func showAlert(title: String, message: String,actionTitle: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: actionTitle, style: UIAlertAction.Style.default, handler: nil))
-        present(alert, animated: true, completion: nil)
+    func showAlert(title: String, message: String, actionTitle: String) {
+        alertViewController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        alertViewController?.addAction(UIAlertAction(title: actionTitle, style: UIAlertAction.Style.default, handler: nil))
+        if let alert = alertViewController {
+            present(alert, animated: true, completion: nil)
+        }
     }
 
-    @objc func showInvalidSourceOrDestinationAlert() {
+    func showInvalidSourceOrDestinationAlert() {
         trainsListTable.isHidden = true
         hideProgressIndicator(view: view)
         showAlert(title: Alert.InvalidSourceOrDestination.title, message: Alert.InvalidSourceOrDestination.message, actionTitle: Alert.actionTitle)
@@ -100,7 +107,7 @@ extension SearchTrainViewController: UITextFieldDelegate {
         dropDown = DropDown()
         dropDown.anchorView = textField
         dropDown.direction = .bottom
-        dropDown.bottomOffset = CGPoint(x: 0, y: (dropDown.anchorView?.plainView.bounds.height)!)
+        dropDown.bottomOffset = CGPoint(x: 0.0, y: dropDown.anchorView?.plainView.bounds.height ?? 0.0)
         dropDown.dataSource = stationsList.map { $0.stationDesc }
         dropDown.selectionAction = { (_: Int, item: String) in
             if textField == self.sourceTxtField {
@@ -127,7 +134,7 @@ extension SearchTrainViewController: UITextFieldDelegate {
                 desiredSearchText = String(desiredSearchText.dropLast())
             }
 
-            dropDown.dataSource = stationsList.map {$0.stationDesc}
+            dropDown.dataSource = stationsList.map { $0.stationDesc }
             dropDown.show()
             dropDown.reloadAllComponents()
         }
@@ -156,8 +163,10 @@ extension SearchTrainViewController: UITableViewDataSource {
     }
 }
 
+private let rowHeight: CGFloat = 140.0
+
 extension SearchTrainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 140
+        return rowHeight
     }
 }

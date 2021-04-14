@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import XMLParsing
 @testable import MyTravelHelper
+import XMLParsing
 
 class TestUtility {
 
@@ -18,7 +18,7 @@ class TestUtility {
         }
         return try? XMLDecoder().decode(Stations.self, from: xmlData)
     }
-    
+
     static func allStationsFromSourceCodeBFSTC() -> StationData? {
         guard let xmlData = dataFromFile(fileName: "StationDataForTrainCode_BFSTC", ofType: ".xml") else {
             return nil
@@ -41,4 +41,3 @@ class TestUtility {
         return try? Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
     }
 }
-

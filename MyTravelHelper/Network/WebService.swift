@@ -10,13 +10,12 @@ import Foundation
 import XMLParsing
 
 class WebService: WebServiceProtocol {
-    
     private var urlSession: URLSession
-    
+
     init(urlSession: URLSession = .shared) {
         self.urlSession = urlSession
     }
-    
+
     func fetchallStations(completionHandler: @escaping (Stations?, WebServicesError?) -> Void) {
         guard Reach().isNetworkReachable() else {
             completionHandler(nil, WebServicesError.networkNotReachable)
@@ -30,7 +29,6 @@ class WebService: WebServiceProtocol {
 
         let request = URLRequest(url: url)
         let dataTask = urlSession.dataTask(with: request) { data, _, error in
-            
             if let requestError = error {
                 completionHandler(nil, WebServicesError.failedRequest(description: requestError.localizedDescription))
                 return
@@ -78,7 +76,7 @@ class WebService: WebServiceProtocol {
             completionHandler(nil, WebServicesError.networkNotReachable)
             return
         }
-        
+
         let urlString = String(format: SearchTrainURLs.trainMovements, trainCode, trainDate)
         guard let url = URL(string: urlString) else {
             completionHandler(nil, WebServicesError.invalidRequestURLString)
@@ -87,7 +85,6 @@ class WebService: WebServiceProtocol {
 
         let request = URLRequest(url: url)
         let dataTask = urlSession.dataTask(with: request) { data, _, error in
-            
             if let requestError = error {
                 completionHandler(nil, WebServicesError.failedRequest(description: requestError.localizedDescription))
                 return

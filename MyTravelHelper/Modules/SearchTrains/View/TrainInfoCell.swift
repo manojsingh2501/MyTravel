@@ -8,6 +8,7 @@
 
 import UIKit
 
+// swiftlint:disable private_outlet
 class TrainInfoCell: UITableViewCell {
     @IBOutlet weak var destinationTimeLabel: UILabel!
     @IBOutlet weak var sourceTimeLabel: UILabel!
@@ -15,3 +16,4 @@ class TrainInfoCell: UITableViewCell {
     @IBOutlet weak var souceInfoLabel: UILabel!
     @IBOutlet weak var trainCode: UILabel!
 }
+// swiftlint:enable private_outlet
