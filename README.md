@@ -4,4 +4,5 @@ Using Swift 5 as the programming language, it is implemented following the MVP a
 
 
 Written the unit tests using XCTest framework.
-The dependencies are managed with Cocoapods (v1.5.0), so before compiling the project, please run pod install
+
+The dependencies are managed with Cocoapods, so before compiling the project, please run pod install
